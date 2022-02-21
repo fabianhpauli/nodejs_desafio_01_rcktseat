@@ -26,7 +26,7 @@ function checkIfTodoExists(request, response, next) {
 
   const todo = user.todos.find(todo => todo.id === id)
   if (!todo) {
-    return response.status(404).json({ error: "Todo not found :(" })
+    return response.status(404).json(todo)
   }
   request.todo = todo
   return next();
@@ -39,15 +39,15 @@ app.post('/users', (request, response) => {
   if (userAlreadyExists) {
     return response.status(400).json({ error: "This username already exists" });
   }
-
-  users.push({
+  let user = {
     username,
     name,
     id: uuidv4(),
     todos: [],
-  });
+  }
+  users.push(user);
 
-  return response.status(201).json({ message: 'User successfully created' })
+  return response.status(201).json(user)
 });
 
 app.get('/todos', checkIfUsernameIsValid, (request, response) => {
@@ -68,7 +68,7 @@ app.post('/todos', checkIfUsernameIsValid, (request, response) => {
     created_at: new Date()
   }
   user.todos.push(todo)
-  return response.status(201).json({ id: todo.id })
+  return response.status(201).json(todo)
 
 });
 
@@ -78,7 +78,7 @@ app.put('/todos/:id', checkIfUsernameIsValid, checkIfTodoExists, (request, respo
 
   todo.title = title;
   todo.deadline = new Date(deadline);
-  return response.status(200).json({ mesage: 'Todo updated successfully' })
+  return response.status(200).json(todo)
 });
 
 app.patch('/todos/:id/done', checkIfUsernameIsValid, checkIfTodoExists, (request, response) => {
