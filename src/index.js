@@ -97,4 +97,5 @@ app.delete('/todos/:id', checkIfUsernameIsValid, checkIfTodoExists, (request, re
   return response.status(200).json(todo);
 });
 
+
 module.exports = app;
